@@ -25,7 +25,7 @@ A local SQL instance will need to be created and run on the hosting server compu
 - SQLUSER (Username for SQL instance. This user should have the appropriate permissions to modify the database)
 - SQLPASSWORD (Password for SQL instance)
 
-In the .env file in the **client folder**, modify the ENDPOINT and ENDPOINT_TEST variables to fit your server's IP address and port. If both are being run on the same computer, no modification is necessary.
+In the .env file in the **client folder**, modify the ENDPOINT and ENDPOINT_TEST variables to fit your server's IP address and port. If both client and server are being run on the same computer, no modification is necessary.
 
 ## Usage - Server
 Your MySQL instance must be running before starting up the server.
