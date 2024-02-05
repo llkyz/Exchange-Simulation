@@ -8,12 +8,16 @@ config = dotenv_values(".env")
 
 app = Flask(__name__)
 
-mydb = mysql.connector.connect(
-    host=config["SQLHOST"],
-    user=config["SQLUSER"],
-    password=config["SQLPASSWORD"],
-    port=config["SQLPORT"]
-)
+try:
+    mydb = mysql.connector.connect(
+        host=config["SQLHOST"],
+        user=config["SQLUSER"],
+        password=config["SQLPASSWORD"],
+        port=config["SQLPORT"]
+    )
+except:
+    print("Unable to connect to MySQL database. Exiting program.")
+    exit()
 
 mycursor = mydb.cursor()
 
