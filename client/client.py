@@ -9,7 +9,6 @@ config = dotenv_values(".env")
 
 endpoint = config["ENDPOINT"]
 endpointTest = config["ENDPOINT_TEST"]
-# 'https://api.binance.com/api/v3/order'
 
 # ==================================
 # Load Orders and Precision files
@@ -36,6 +35,11 @@ next(ordersFile, None) # Skip header
 for row in ordersFile:
     orders.append({"pair": row[0], "direction": row[1], "price": row[2], "quantity": row[3], "account": row[4]})
 
+# ==================================
+# Await user input
+# ==================================
+    
+# [Y] = Actual orders. [T] = Test orders. [N] = Abort
 keystroke = input(f"{len(users)} accounts and {len(orders)} orders loaded. To proceed, input Y. To do a test run, input T. To abort, input N: ")
 
 while True:
@@ -101,15 +105,19 @@ for order in orders:
     hashPassword = hashObject.hexdigest()
     params['signature'] = hashPassword
 
-    if keystroke.casefold() == "y":
-        response = requests.post(endpoint, headers=headers, data=params)
-    elif keystroke.casefold() == "t":
-        response = requests.post(endpointTest, headers=headers, data=params)
-    if (response.ok):
-        json = response.json()
-        print(f'[{json['message']}] AccountID: {order['account']}, Balance: {json['balance']}')
-    else:
-        print(f"[Failed: {response.text}] AccountID: {order['account']}, {order["pair"]} {order["quantity"]} @ ${order["price"]}")
+    # Send request to API endpoint
+    try:
+        if keystroke.casefold() == "y": # Actual order
+            response = requests.post(endpoint, headers=headers, data=params)
+        elif keystroke.casefold() == "t": # Test order
+            response = requests.post(endpointTest, headers=headers, data=params)
+        if (response.ok):
+            json = response.json()
+            print(f"[{json['message']}] AccountID: {order['account']}, Balance: {json['balance']}")
+        else:
+            print(f"[Failed: {response.text}] AccountID: {order['account']}, {order['pair']} {order['quantity']} @ ${order['price']}")
+    except requests.exceptions.Timeout:
+        print(f"[Failed: Request timed out] AccountID: {order['account']}, {order['pair']} {order['quantity']} @ ${order['price']}")
     time.sleep(0.1) # Sleep 100ms to adhere to API rate limit
 
 if keystroke.casefold() == "y":
