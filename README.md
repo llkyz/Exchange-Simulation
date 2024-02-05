@@ -39,7 +39,6 @@ Order endpoints are rate limited to 10 requests per second. The API endpoints ar
 
 Upon server startup, the program will check if your exchange database exists, and if it doesn't, will generate a new database and tables with pre-populated users and API keys.
 
-
 To reset the database, navigate on your web browser to:
 > http://[IP address]:[host]/api/reset
 
@@ -48,3 +47,12 @@ The server must first be running in order for the client to interact with it.
 
 To run the client, navigate to the **client folder** on your terminal and input:
 > python client.py
+
+The Orders.csv and Precision.csv files will be summary of # of orders and # of users will be given.
+
+The end-user can then choose **[Y]** to proceed with sending actual orders, **[T]** to send simulated test orders that do not affect the server's databases, or **[N]** to cancel.
+
+For every order sent, the end-user will receive a response for whether the order placement succeeded or failed.
+
+- Successful responses return a success message and the account's new balance after placing the order
+- Failed responses return a message on why the order failed, and prints out the details of the order
